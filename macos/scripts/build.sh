@@ -22,4 +22,4 @@ cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 plutil -replace CFBundleShortVersionString -string "$VERSION" "$APP/Contents/Info.plist"
 
 codesign --force --options runtime --sign "${SIGN_IDENTITY:--}" "$APP"
-echo "已生成 $APP（$VERSION）"
+echo "已生成 ${APP}（${VERSION}）"
