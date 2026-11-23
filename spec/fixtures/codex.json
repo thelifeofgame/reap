@@ -1,0 +1,38 @@
+{
+  "description": "Codex：CLI 与 App 都是宿主；App 自身组件、被它拉起的用户浏览器、~/.codex 下的插件不算；MCP 服务器环境可读但无标记，不算",
+  "snapshot": {
+    "platform": "darwin",
+    "selfPid": 999,
+    "processes": [
+      { "pid": 1, "ppid": 0, "pgid": 1, "exe": "/sbin/launchd", "cmd": "/sbin/launchd", "env": null, "own": false },
+      { "pid": 50, "ppid": 1, "pgid": 50, "exe": "/bin/zsh", "cmd": "-zsh", "env": null },
+      { "pid": 800, "ppid": 50, "pgid": 800, "exe": "/Users/u/.nvm/versions/node/v20/lib/node_modules/@openai/codex/vendor/aarch64-apple-darwin/codex/codex",
+        "cmd": "codex", "env": { "PATH": "/usr/bin" } },
+      { "pid": 801, "ppid": 800, "pgid": 801, "exe": "/usr/local/bin/bash", "cmd": "bash -lc npm run dev",
+        "env": { "CODEX_SANDBOX": "seatbelt", "CODEX_SANDBOX_NETWORK_DISABLED": "1" } },
+      { "pid": 802, "ppid": 1, "pgid": 802, "exe": "/usr/local/bin/node", "cmd": "node next-dev.js",
+        "env": { "CODEX_SHELL": "1", "CODEX_THREAD_ID": "thr-1" } },
+      { "pid": 900, "ppid": 1, "pgid": 900, "exe": "/Applications/ChatGPT.app/Contents/MacOS/ChatGPT", "cmd": "ChatGPT", "env": {} },
+      { "pid": 901, "ppid": 900, "pgid": 900, "exe": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/CodexCLI.app/Contents/MacOS/codex",
+        "cmd": "codex app-server", "env": { "CODEX_SHELL": "1" } },
+      { "pid": 902, "ppid": 901, "pgid": 902, "exe": "/Applications/ChatGPT.app/Contents/Resources/codex-cli/bin/codex-code-mode-host",
+        "cmd": "codex-code-mode-host", "env": { "CODEX_SHELL": "1" } },
+      { "pid": 903, "ppid": 901, "pgid": 903, "exe": "/Users/u/.local/bin/toolbox", "cmd": "toolbox mcp", "env": { "PATH": "/usr/bin" } },
+      { "pid": 904, "ppid": 901, "pgid": 904, "exe": "/usr/local/bin/node", "cmd": "node server.js", "env": { "CODEX_SHELL": "1" } },
+      { "pid": 905, "ppid": 1, "pgid": 905, "exe": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "cmd": "Google Chrome", "env": { "CODEX_SHELL": "1" } },
+      { "pid": 906, "ppid": 905, "pgid": 905, "exe": "/Users/u/.codex/plugins/cache/openai-bundled/chrome/latest/extension-host/macos/arm64/host",
+        "cmd": "host", "env": { "CODEX_SHELL": "1" } },
+      { "pid": 907, "ppid": 905, "pgid": 905, "exe": "/Applications/Google Chrome.app/Contents/Frameworks/Google Chrome Framework.framework/Helpers/Google Chrome Helper.app/Contents/MacOS/Google Chrome Helper",
+        "cmd": "Google Chrome Helper", "env": null }
+    ],
+    "hostSessions": {},
+    "outputSessions": {},
+    "watchedGroups": {}
+  },
+  "expect": [
+    { "pid": 801, "agent": "codex", "session": null, "alive": true },
+    { "pid": 802, "agent": "codex", "session": "thr-1", "alive": false },
+    { "pid": 904, "agent": "codex", "session": null, "alive": true }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "description": "带标记的 Claude 子进程：宿主活着算活跃，宿主已退出算残留；残留进程的子进程跟着算；本工具自己及其子进程不算",
+  "snapshot": {
+    "platform": "darwin",
+    "selfPid": 999,
+    "processes": [
+      { "pid": 1, "ppid": 0, "pgid": 1, "exe": "/sbin/launchd", "cmd": "/sbin/launchd", "env": null, "own": false },
+      { "pid": 50, "ppid": 1, "pgid": 50, "exe": "/bin/zsh", "cmd": "-zsh", "env": null },
+      { "pid": 100, "ppid": 50, "pgid": 100, "exe": "/Users/u/.local/bin/claude", "cmd": "claude", "env": { "PATH": "/usr/bin" } },
+      { "pid": 101, "ppid": 100, "pgid": 101, "exe": "/usr/local/bin/node", "cmd": "node dev-server.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-a", "CLAUDE_PID": "100" } },
+      { "pid": 201, "ppid": 1, "pgid": 201, "exe": "/usr/local/bin/node", "cmd": "node vite.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-b", "CLAUDE_PID": "150" } },
+      { "pid": 202, "ppid": 201, "pgid": 201, "exe": "/usr/local/bin/node", "cmd": "node worker.js", "env": { "PATH": "/usr/bin" } },
+      { "pid": 300, "ppid": 50, "pgid": 300, "exe": "/usr/local/bin/node", "cmd": "node mine.js", "env": { "PATH": "/usr/bin" } },
+      { "pid": 400, "ppid": 1, "pgid": 400, "exe": "/usr/local/bin/node", "cmd": "node x.js", "env": { "CLAUDECODE": "0" } },
+      { "pid": 999, "ppid": 1, "pgid": 999, "exe": "/Applications/Reap.app/Contents/MacOS/Reap", "cmd": "Reap",
+        "env": { "CLAUDECODE": "1", "CLAUDE_PID": "100" } },
+      { "pid": 1000, "ppid": 999, "pgid": 999, "exe": "/usr/sbin/lsof", "cmd": "lsof",
+        "env": { "CLAUDECODE": "1", "CLAUDE_PID": "100" } }
+    ],
+    "hostSessions": { "100": "sess-a" },
+    "outputSessions": {},
+    "watchedGroups": {}
+  },
+  "expect": [
+    { "pid": 101, "agent": "claude", "session": "sess-a", "alive": true },
+    { "pid": 201, "agent": "claude", "session": "sess-b", "alive": false },
+    { "pid": 202, "agent": "claude", "session": "sess-b", "alive": false }
+  ]
+}

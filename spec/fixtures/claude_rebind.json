@@ -1,0 +1,23 @@
+{
+  "description": "会话 ID 变了（/clear、续接）但进程还挂在活宿主下：归到宿主当前会话；子 Agent 继承父会话",
+  "snapshot": {
+    "platform": "darwin",
+    "selfPid": 999,
+    "processes": [
+      { "pid": 1, "ppid": 0, "pgid": 1, "exe": "/sbin/launchd", "cmd": "/sbin/launchd", "env": null, "own": false },
+      { "pid": 100, "ppid": 1, "pgid": 100, "exe": "/Users/u/.local/bin/claude", "cmd": "claude", "env": {} },
+      { "pid": 101, "ppid": 100, "pgid": 101, "exe": "/usr/local/bin/node", "cmd": "node mcp.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-old", "CLAUDE_PID": "100" } },
+      { "pid": 110, "ppid": 100, "pgid": 110, "exe": "/Users/u/.local/bin/claude", "cmd": "claude -p sub", "env": { "CLAUDECODE": "1" } },
+      { "pid": 111, "ppid": 110, "pgid": 111, "exe": "/usr/local/bin/node", "cmd": "node test.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-sub", "CLAUDE_PID": "110" } }
+    ],
+    "hostSessions": { "100": "sess-new" },
+    "outputSessions": {},
+    "watchedGroups": {}
+  },
+  "expect": [
+    { "pid": 101, "agent": "claude", "session": "sess-new", "alive": true },
+    { "pid": 111, "agent": "claude", "session": "sess-new", "alive": true }
+  ]
+}

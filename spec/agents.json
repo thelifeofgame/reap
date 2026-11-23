@@ -1,0 +1,106 @@
+{
+  "version": 1,
+  "agents": [
+    {
+      "id": "claude",
+      "name": "Claude Code",
+      "experimental": false,
+      "hostNames": [
+        "claude"
+      ],
+      "hostPathContains": [],
+      "markers": [
+        {
+          "env": "CLAUDECODE",
+          "value": "1"
+        }
+      ],
+      "sessionEnv": "CLAUDE_CODE_SESSION_ID",
+      "hostPidEnv": "CLAUDE_PID",
+      "ignorePathContains": [],
+      "ignoreExePrefixes": {}
+    },
+    {
+      "id": "codex",
+      "name": "Codex",
+      "experimental": false,
+      "hostNames": [
+        "codex"
+      ],
+      "hostPathContains": [
+        "/ChatGPT.app/Contents/MacOS/",
+        "/Codex.app/Contents/MacOS/"
+      ],
+      "markers": [
+        {
+          "env": "CODEX_SHELL",
+          "value": "1"
+        },
+        {
+          "env": "CODEX_SANDBOX"
+        },
+        {
+          "env": "CODEX_THREAD_ID"
+        }
+      ],
+      "sessionEnv": "CODEX_THREAD_ID",
+      "hostPidEnv": null,
+      "ignorePathContains": [
+        "/ChatGPT.app/",
+        "/Codex.app/",
+        "/.codex/"
+      ],
+      "ignoreExePrefixes": {
+        "darwin": [
+          "/Applications/",
+          "/System/"
+        ],
+        "windows": [
+          "C:/Program Files/Google/Chrome/",
+          "C:/Program Files (x86)/Google/Chrome/",
+          "C:/Program Files (x86)/Microsoft/Edge/",
+          "C:/Program Files/Mozilla Firefox/",
+          "C:/Program Files/WindowsApps/"
+        ]
+      }
+    },
+    {
+      "id": "cursor",
+      "name": "Cursor",
+      "experimental": true,
+      "hostNames": [
+        "cursor-agent"
+      ],
+      "hostPathContains": [
+        "/Cursor.app/Contents/MacOS/",
+        "/Programs/cursor/Cursor.exe"
+      ],
+      "markers": [
+        {
+          "env": "CURSOR_AGENT",
+          "value": "1"
+        }
+      ],
+      "sessionEnv": null,
+      "hostPidEnv": null,
+      "ignorePathContains": [
+        "/Cursor.app/",
+        "/.cursor/",
+        "/Programs/cursor/"
+      ],
+      "ignoreExePrefixes": {
+        "darwin": [
+          "/Applications/",
+          "/System/"
+        ],
+        "windows": [
+          "C:/Program Files/Google/Chrome/",
+          "C:/Program Files (x86)/Google/Chrome/",
+          "C:/Program Files (x86)/Microsoft/Edge/",
+          "C:/Program Files/Mozilla Firefox/",
+          "C:/Program Files/WindowsApps/"
+        ]
+      }
+    }
+  ]
+}

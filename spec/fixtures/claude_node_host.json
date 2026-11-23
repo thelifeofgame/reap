@@ -1,0 +1,25 @@
+{
+  "description": "npm 安装的 Claude Code 进程名是 node：有会话记录（hostSessions）的进程就是 Claude 宿主，它的子进程不能被当成残留",
+  "snapshot": {
+    "platform": "darwin",
+    "selfPid": 999,
+    "processes": [
+      { "pid": 1, "ppid": 0, "pgid": 1, "exe": "/sbin/launchd", "cmd": "/sbin/launchd", "env": null, "own": false },
+      { "pid": 100, "ppid": 1, "pgid": 100, "exe": "/usr/local/bin/node",
+        "cmd": "node /usr/local/lib/node_modules/@anthropic-ai/claude-code/cli.js", "env": { "PATH": "/usr/bin" } },
+      { "pid": 101, "ppid": 100, "pgid": 101, "exe": "/usr/local/bin/node", "cmd": "node dev.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-a", "CLAUDE_PID": "100" } },
+      { "pid": 102, "ppid": 100, "pgid": 102, "exe": "/bin/zsh", "cmd": "/bin/zsh -c sleep 60", "env": null },
+      { "pid": 201, "ppid": 1, "pgid": 201, "exe": "/usr/local/bin/node", "cmd": "node old.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-b", "CLAUDE_PID": "150" } }
+    ],
+    "hostSessions": { "100": "sess-a" },
+    "outputSessions": {},
+    "watchedGroups": {}
+  },
+  "expect": [
+    { "pid": 101, "agent": "claude", "session": "sess-a", "alive": true },
+    { "pid": 102, "agent": "claude", "session": "sess-a", "alive": true },
+    { "pid": 201, "agent": "claude", "session": "sess-b", "alive": false }
+  ]
+}

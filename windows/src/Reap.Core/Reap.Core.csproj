@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- 纯逻辑，不依赖 Windows：判定、分组、格式化、worktree 读取。可以在任何平台编译和测试。 -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Reap.Core</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Reap.Core.Tests" />
+  </ItemGroup>
+</Project>

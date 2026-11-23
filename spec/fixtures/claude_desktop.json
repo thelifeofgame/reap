@@ -1,0 +1,25 @@
+{
+  "description": "Claude 桌面版（可执行文件名 Claude，大写）不是 Claude Code 宿主：macOS/Linux 上文件名区分大小写；它的隐藏环境辅助进程不算",
+  "snapshot": {
+    "platform": "darwin",
+    "selfPid": 999,
+    "processes": [
+      { "pid": 1, "ppid": 0, "pgid": 1, "exe": "/sbin/launchd", "cmd": "/sbin/launchd", "env": null, "own": false },
+      { "pid": 60, "ppid": 1, "pgid": 60, "exe": "/Applications/Claude.app/Contents/MacOS/Claude", "cmd": "Claude", "env": {} },
+      { "pid": 61, "ppid": 60, "pgid": 61, "exe": "/Applications/Claude.app/Contents/Helpers/chrome-native-host", "cmd": "chrome-native-host", "env": null },
+      { "pid": 100, "ppid": 60, "pgid": 100,
+        "exe": "/Users/u/Library/Application Support/Claude/claude-code/2.1.330/claude.app/Contents/MacOS/claude", "cmd": "claude", "env": {} },
+      { "pid": 101, "ppid": 100, "pgid": 101, "exe": "/usr/local/bin/node", "cmd": "node mcp.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-a", "CLAUDE_PID": "100" } },
+      { "pid": 201, "ppid": 1, "pgid": 201, "exe": "/usr/local/bin/node", "cmd": "node vite.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-b", "CLAUDE_PID": "150" } }
+    ],
+    "hostSessions": { "100": "sess-a" },
+    "outputSessions": {},
+    "watchedGroups": {}
+  },
+  "expect": [
+    { "pid": 101, "agent": "claude", "session": "sess-a", "alive": true },
+    { "pid": 201, "agent": "claude", "session": "sess-b", "alive": false }
+  ]
+}

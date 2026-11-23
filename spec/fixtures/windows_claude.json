@@ -1,0 +1,23 @@
+{
+  "description": "Windows：可执行文件名去掉 .exe 且不区分大小写，路径反斜杠统一；父进程已退出时采集端把 ppid 置 0",
+  "snapshot": {
+    "platform": "windows",
+    "selfPid": 9000,
+    "processes": [
+      { "pid": 4, "ppid": 0, "pgid": 4, "exe": "", "cmd": "System", "env": null, "own": false },
+      { "pid": 1100, "ppid": 4, "pgid": 1100, "exe": "C:\\Program Files\\WindowsApps\\Terminal\\WindowsTerminal.exe", "cmd": "WindowsTerminal.exe", "env": {} },
+      { "pid": 1200, "ppid": 1100, "pgid": 1200, "exe": "C:\\Users\\u\\.local\\bin\\Claude.EXE", "cmd": "claude", "env": {} },
+      { "pid": 1201, "ppid": 0, "pgid": 1201, "exe": "C:\\Program Files\\nodejs\\node.exe", "cmd": "node server.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-w", "CLAUDE_PID": "1300" } },
+      { "pid": 1202, "ppid": 1200, "pgid": 1202, "exe": "C:\\Program Files\\nodejs\\node.exe", "cmd": "node dev.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-x", "CLAUDE_PID": "1200" } }
+    ],
+    "hostSessions": { "1200": "sess-x" },
+    "outputSessions": {},
+    "watchedGroups": {}
+  },
+  "expect": [
+    { "pid": 1201, "agent": "claude", "session": "sess-w", "alive": false },
+    { "pid": 1202, "agent": "claude", "session": "sess-x", "alive": true }
+  ]
+}

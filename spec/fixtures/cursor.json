@@ -1,0 +1,29 @@
+{
+  "description": "Cursor（实验性）：带 CURSOR_AGENT=1 的进程；IDE 是按路径识别的 App 宿主，不收用户自己开的隐藏环境终端",
+  "snapshot": {
+    "platform": "darwin",
+    "selfPid": 999,
+    "processes": [
+      { "pid": 1, "ppid": 0, "pgid": 1, "exe": "/sbin/launchd", "cmd": "/sbin/launchd", "env": null, "own": false },
+      { "pid": 700, "ppid": 1, "pgid": 700, "exe": "/Applications/Cursor.app/Contents/MacOS/Cursor", "cmd": "Cursor", "env": {} },
+      { "pid": 701, "ppid": 700, "pgid": 700,
+        "exe": "/Applications/Cursor.app/Contents/Frameworks/Cursor Helper (Plugin).app/Contents/MacOS/Cursor Helper (Plugin)",
+        "cmd": "Cursor Helper (Plugin)", "env": { "CURSOR_AGENT": "1" } },
+      { "pid": 702, "ppid": 701, "pgid": 702, "exe": "/bin/zsh", "cmd": "/bin/zsh -c npm run dev", "env": null },
+      { "pid": 703, "ppid": 702, "pgid": 702, "exe": "/usr/local/bin/node", "cmd": "node vite.js", "env": { "CURSOR_AGENT": "1" } },
+      { "pid": 704, "ppid": 701, "pgid": 704, "exe": "/bin/zsh", "cmd": "-zsh", "env": null },
+      { "pid": 710, "ppid": 1, "pgid": 710, "exe": "/usr/local/bin/node", "cmd": "node api.js", "env": { "CURSOR_AGENT": "1" } },
+      { "pid": 720, "ppid": 1, "pgid": 720, "exe": "/Users/u/.local/bin/cursor-agent", "cmd": "cursor-agent", "env": {} },
+      { "pid": 721, "ppid": 720, "pgid": 721, "exe": "/usr/local/bin/node", "cmd": "node t.js", "env": { "CURSOR_AGENT": "1" } }
+    ],
+    "hostSessions": {},
+    "outputSessions": {},
+    "watchedGroups": {}
+  },
+  "expect": [
+    { "pid": 702, "agent": "cursor", "session": null, "alive": true },
+    { "pid": 703, "agent": "cursor", "session": null, "alive": true },
+    { "pid": 710, "agent": "cursor", "session": null, "alive": false },
+    { "pid": 721, "agent": "cursor", "session": null, "alive": true }
+  ]
+}

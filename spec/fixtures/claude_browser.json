@@ -1,0 +1,28 @@
+{
+  "description": "Playwright 打开的浏览器读不到环境：跟着打开它的进程算；用户自己的 Chrome 不算",
+  "snapshot": {
+    "platform": "darwin",
+    "selfPid": 999,
+    "processes": [
+      { "pid": 1, "ppid": 0, "pgid": 1, "exe": "/sbin/launchd", "cmd": "/sbin/launchd", "env": null, "own": false },
+      { "pid": 201, "ppid": 1, "pgid": 201, "exe": "/usr/local/bin/node", "cmd": "node playwright-test.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-b", "CLAUDE_PID": "150" } },
+      { "pid": 202, "ppid": 201, "pgid": 201,
+        "exe": "/Users/u/Library/Caches/ms-playwright/chromium-1140/chrome-mac/Chromium.app/Contents/MacOS/Chromium",
+        "cmd": "Chromium --remote-debugging-pipe", "env": null },
+      { "pid": 203, "ppid": 202, "pgid": 201,
+        "exe": "/Users/u/Library/Caches/ms-playwright/chromium-1140/chrome-mac/Chromium.app/Contents/Frameworks/Chromium Framework.framework/Helpers/Chromium Helper (Renderer).app/Contents/MacOS/Chromium Helper (Renderer)",
+        "cmd": "Chromium Helper (Renderer) --type=renderer", "env": null },
+      { "pid": 300, "ppid": 1, "pgid": 300, "exe": "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+        "cmd": "Google Chrome", "env": null }
+    ],
+    "hostSessions": {},
+    "outputSessions": {},
+    "watchedGroups": {}
+  },
+  "expect": [
+    { "pid": 201, "agent": "claude", "session": "sess-b", "alive": false },
+    { "pid": 202, "agent": "claude", "session": "sess-b", "alive": false },
+    { "pid": 203, "agent": "claude", "session": "sess-b", "alive": false }
+  ]
+}

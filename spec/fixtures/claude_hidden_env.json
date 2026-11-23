@@ -1,0 +1,31 @@
+{
+  "description": "环境不可读的系统程序：靠向上传播、输出文件、进程组、宿主下的独立进程组识别；Claude 自己同组的辅助进程不算",
+  "snapshot": {
+    "platform": "darwin",
+    "selfPid": 999,
+    "processes": [
+      { "pid": 1, "ppid": 0, "pgid": 1, "exe": "/sbin/launchd", "cmd": "/sbin/launchd", "env": null, "own": false },
+      { "pid": 100, "ppid": 1, "pgid": 100, "exe": "/Users/u/.local/bin/claude", "cmd": "claude", "env": {} },
+      { "pid": 400, "ppid": 1, "pgid": 400, "exe": "/bin/zsh", "cmd": "/bin/zsh -c while true; do node server.js; done", "env": null },
+      { "pid": 401, "ppid": 400, "pgid": 400, "exe": "/usr/local/bin/node", "cmd": "node server.js",
+        "env": { "CLAUDECODE": "1", "CLAUDE_CODE_SESSION_ID": "sess-b", "CLAUDE_PID": "150" } },
+      { "pid": 500, "ppid": 1, "pgid": 500, "exe": "/usr/bin/tail", "cmd": "tail -f app.log", "env": null },
+      { "pid": 501, "ppid": 1, "pgid": 501, "exe": "/usr/bin/tail", "cmd": "tail -f other.log", "env": null },
+      { "pid": 600, "ppid": 1, "pgid": 600, "exe": "/usr/bin/ssh", "cmd": "ssh -N -L 5432:db:5432 host", "env": null },
+      { "pid": 700, "ppid": 1, "pgid": 700, "exe": "/usr/bin/ssh", "cmd": "ssh mine", "env": null },
+      { "pid": 800, "ppid": 100, "pgid": 800, "exe": "/bin/zsh", "cmd": "/bin/zsh -c sleep 100", "env": null },
+      { "pid": 801, "ppid": 100, "pgid": 100, "exe": "/usr/bin/git", "cmd": "git status", "env": null }
+    ],
+    "hostSessions": { "100": "sess-a" },
+    "outputSessions": { "500": "sess-b", "501": "sess-a" },
+    "watchedGroups": { "600": { "agent": "claude", "session": "sess-c", "hostPid": 150 } }
+  },
+  "expect": [
+    { "pid": 400, "agent": "claude", "session": "sess-b", "alive": false },
+    { "pid": 401, "agent": "claude", "session": "sess-b", "alive": false },
+    { "pid": 500, "agent": "claude", "session": "sess-b", "alive": false },
+    { "pid": 501, "agent": "claude", "session": "sess-a", "alive": true },
+    { "pid": 600, "agent": "claude", "session": "sess-c", "alive": false },
+    { "pid": 800, "agent": "claude", "session": "sess-a", "alive": true }
+  ]
+}

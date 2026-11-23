@@ -1,0 +1,26 @@
+{
+  "description": "Windows：路径比较不区分大小写；Program Files 下的 node 不算浏览器、照常识别；Chrome 和 Cursor 安装目录下的组件被忽略；Cursor IDE 按安装路径识别为宿主",
+  "snapshot": {
+    "platform": "windows",
+    "selfPid": 9000,
+    "processes": [
+      { "pid": 4, "ppid": 0, "pgid": 4, "exe": "", "cmd": "System", "env": null, "own": false },
+      { "pid": 2000, "ppid": 0, "pgid": 2000, "exe": "C:\\Program Files\\nodejs\\node.exe", "cmd": "node server.js",
+        "env": { "CODEX_SHELL": "1", "CODEX_THREAD_ID": "thr-w" } },
+      { "pid": 2001, "ppid": 0, "pgid": 2001, "exe": "c:\\program files\\google\\chrome\\application\\chrome.exe", "cmd": "chrome.exe",
+        "env": { "CODEX_SHELL": "1" } },
+      { "pid": 3000, "ppid": 0, "pgid": 3000, "exe": "C:\\Users\\u\\AppData\\Local\\Programs\\cursor\\Cursor.exe", "cmd": "Cursor.exe", "env": {} },
+      { "pid": 3001, "ppid": 3000, "pgid": 3001, "exe": "C:\\Users\\u\\AppData\\Local\\Programs\\cursor\\resources\\app\\bin\\helper.exe",
+        "cmd": "helper.exe", "env": { "CURSOR_AGENT": "1" } },
+      { "pid": 3002, "ppid": 3000, "pgid": 3002, "exe": "C:\\Program Files\\nodejs\\node.exe", "cmd": "node vite.js",
+        "env": { "CURSOR_AGENT": "1" } }
+    ],
+    "hostSessions": {},
+    "outputSessions": {},
+    "watchedGroups": {}
+  },
+  "expect": [
+    { "pid": 2000, "agent": "codex", "session": "thr-w", "alive": false },
+    { "pid": 3002, "agent": "cursor", "session": null, "alive": true }
+  ]
+}
