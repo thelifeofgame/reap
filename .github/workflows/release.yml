@@ -1,0 +1,86 @@
+name: Release
+
+# 推送 v* 标签（如 v0.1.0）时构建 macOS 和 Windows 安装包，并发布到 GitHub Release。
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: macos
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 测试
+        run: swift test
+
+      - name: 打包
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          VERSION="$VERSION" scripts/build.sh
+          scripts/make-dmg.sh
+          mv build/Reap.dmg "build/Reap-$VERSION-macos.dmg"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Reap-macos
+          path: macos/build/*.dmg
+          if-no-files-found: error
+
+  windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        arch: [x64, arm64]
+    defaults:
+      run:
+        working-directory: windows
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: 安装 Inno Setup
+        run: |
+          if (-not (Test-Path "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe")) { choco install innosetup -y --no-progress }
+        shell: pwsh
+
+      - name: 测试并打包
+        run: |
+          $version = $env:GITHUB_REF_NAME.TrimStart("v")
+          ./scripts/publish.ps1 -Version $version -Arch ${{ matrix.arch }}
+        shell: pwsh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Reap-windows-${{ matrix.arch }}
+          path: |
+            windows/dist/*.zip
+            windows/dist/*.exe
+          if-no-files-found: error
+
+  release:
+    needs: [macos, windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: 发布
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Reap $GITHUB_REF_NAME" \
+            --generate-notes
