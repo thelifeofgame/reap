@@ -1,88 +1,88 @@
 # Reap
 
-清理 AI 编码工具留下的残留进程和磁盘垃圾。支持 Claude Code、Codex、Cursor，macOS 和 Windows 都能用。
+Clean up the leftover processes and disk clutter that AI coding tools leave behind. Supports Claude Code, Codex, and Cursor on macOS and Windows.
 
-Claude Code、Codex 这类 Agent 会顺手启动开发服务器、文件监听器、浏览器。会话关掉以后，这些进程经常还在后台跑，占着内存和端口，worktree 和临时文件也越积越多。Reap 常驻菜单栏（Windows 上是托盘），帮你找到并清理它们。
+Agents like Claude Code and Codex happily spin up dev servers, file watchers, and browsers. When the session ends, those processes often keep running in the background, holding memory and ports, while worktrees and temp files pile up. Reap lives in your menu bar (system tray on Windows) and helps you find and clean them up.
 
-![Reap 残留进程页](docs/screenshot-leftovers.png)
+![Reap leftovers view](docs/screenshot-leftovers.png)
 
-## 下载
+## Download
 
-到 [Releases](https://github.com/thelifeofgame/reap/releases/latest) 下载最新版本：
+Grab the latest build from [Releases](https://github.com/thelifeofgame/reap/releases/latest):
 
-| 系统 | 文件 | 要求 |
+| Platform | File | Requirements |
 | --- | --- | --- |
-| macOS | `Reap-<版本>-macos.dmg`（Apple 芯片和 Intel 通用） | macOS 14 及以上 |
-| Windows x64 | `Reap-Setup-<版本>-x64.exe` 安装包，或 `Reap-<版本>-x64.zip` 免安装版 | Windows 10 1809 及以上 |
-| Windows ARM | `Reap-Setup-<版本>-arm64.exe`，或 `Reap-<版本>-arm64.zip` | Windows 10 1809 及以上 |
+| macOS | `Reap-<version>-macos.dmg` (universal: Apple silicon and Intel) | macOS 14 or later |
+| Windows x64 | `Reap-Setup-<version>-x64.exe` installer, or `Reap-<version>-x64.zip` portable | Windows 10 1809 or later |
+| Windows ARM | `Reap-Setup-<version>-arm64.exe`, or `Reap-<version>-arm64.zip` | Windows 10 1809 or later |
 
-**首次打开提示“无法验证开发者”（macOS）**：目前还没有做 Apple 公证。打开 DMG 把 Reap 拖进“应用程序”后，在访达里右键 Reap，选“打开”即可。如果提示“已损坏”，在终端执行：
+**First launch says "cannot verify the developer" (macOS)**: the app is not notarized yet. Open the DMG, drag Reap into Applications, then right-click Reap in Finder and choose Open. If macOS says the app is "damaged", run:
 
 ```bash
 xattr -dr com.apple.quarantine /Applications/Reap.app
 ```
 
-**Windows 提示“Windows 已保护你的电脑”**：安装包还没有代码签名，点“更多信息”，再点“仍要运行”。安装不需要管理员权限。
+**Windows shows "Windows protected your PC"**: the installer is not code-signed yet. Click "More info", then "Run anyway". Installing does not require administrator rights.
 
-## 功能
+## Features
 
-- **残留进程**：找出会话已关闭、但还在后台运行的进程，按会话分组显示内存占用和监听端口，可以一键结束一组或全部。先请求进程退出，2 秒后仍未退出的才强制结束。
-- **活跃会话**：列出正在运行的 Agent 会话和它们启动的后台进程。可以设置自动结束空闲太久的 Claude Code 会话，对话记录不会丢，之后用 `claude --resume` 接着聊。
-- **磁盘清理**：
-  - Agent 创建的 git worktree。有未提交改动的移到废纸篓或回收站，不直接删；删 worktree 不会删分支。
-  - 已关闭会话留下的 Claude 临时文件和命令输出。
-  - npm、pnpm、Yarn、Gradle、Cargo、pip、uv、Go 等会自动重新下载的缓存。
-- **菜单栏/托盘常驻**：显示残留进程占用的内存，可以设置登录时启动。
+- **Leftover processes**: finds processes still running in the background after their session was closed, grouped by session with memory usage and listening ports. End a whole group or everything in one click. Reap asks processes to quit first and only force-kills whatever is still alive after 2 seconds.
+- **Active sessions**: lists running agent sessions and the background processes they started. You can auto-end Claude Code sessions that have been idle too long; the transcript is kept, so you can pick the conversation back up with `claude --resume`.
+- **Disk cleanup**:
+  - Git worktrees created by agents. Worktrees with uncommitted changes are moved to the Trash/Recycle Bin instead of being deleted; removing a worktree never deletes the branch.
+  - Claude temp files and command output left behind by closed sessions.
+  - Caches that get downloaded again automatically: npm, pnpm, Yarn, Gradle, Cargo, pip, uv, Go, and more.
+- **Menu bar / tray**: shows how much memory leftover processes are using, with an option to launch at login.
 
-## 怎么判断哪些是残留
+## How Reap decides something is a leftover
 
-| Agent | 识别方式 |
+| Agent | Detection |
 | --- | --- |
-| Claude Code | `CLAUDECODE` 环境变量、会话记录、进程组 |
-| Codex | `CODEX_*` 环境变量。Codex/ChatGPT App 自身组件和你自己的浏览器不会被算进去 |
-| Cursor（实验） | `CURSOR_AGENT=1`。Cursor 没有公开文档，可能漏报 |
+| Claude Code | `CLAUDECODE` environment variable, session records, process groups |
+| Codex | `CODEX_*` environment variables. Components of the Codex/ChatGPT app itself and your own browser are excluded |
+| Cursor (experimental) | `CURSOR_AGENT=1`. Cursor has no public documentation, so detection may miss cases |
 
-进程归属于某个 Agent，并且启动它的 Agent 已经退出，才算残留。正在使用的进程和文件不会出现在可清理列表里，所有删除和结束操作都要你点了才执行。完整规则见 [spec/DETECTION.md](spec/DETECTION.md)，macOS 和 Windows 共用这一份规则和测试用例。
+A process counts as a leftover only when it belongs to an agent and the agent that started it has exited. Processes and files you are actively using never show up in the cleanable list, and nothing is deleted or killed until you click. The full rules live in [spec/DETECTION.md](spec/DETECTION.md); macOS and Windows share the same rules and test cases.
 
-## 隐私
+## Privacy
 
-只在本机读取进程和文件，不联网，不上传任何数据。
+Reap only reads processes and files on your machine. It does not use the network and never uploads anything.
 
-## 从源码构建
+## Building from source
 
-macOS（需要 Xcode 15+ 或 Swift 5.10+）：
+macOS (requires Xcode 15+ or Swift 5.10+):
 
 ```bash
 cd macos
 swift test
-scripts/build.sh      # 生成 build/Reap.app
-scripts/make-dmg.sh   # 生成 build/Reap.dmg
+scripts/build.sh      # produces build/Reap.app
+scripts/make-dmg.sh   # produces build/Reap.dmg
 ```
 
-Windows（需要 .NET 8 SDK，生成安装包还需要 Inno Setup 6）：
+Windows (requires the .NET 8 SDK; building the installer also needs Inno Setup 6):
 
 ```powershell
 cd windows
 pwsh scripts/publish.ps1 -Version 0.1.0 -Arch x64
 ```
 
-## 发布新版本
+## Releasing a new version
 
-推送 `v` 开头的标签，GitHub Actions 会自动构建 macOS 和 Windows 安装包并发布到 Releases：
+Push a tag starting with `v` and GitHub Actions builds the macOS and Windows installers and publishes them to Releases:
 
 ```bash
 git tag v0.1.0
 git push origin v0.1.0
 ```
 
-## 反馈
+## Feedback
 
-遇到误判（该清的没列出来，或者列出了不该清的），或者想支持新的 Agent，欢迎提 [Issue](https://github.com/thelifeofgame/reap/issues)。新增 Agent 一般只需要改 [spec/agents.json](spec/agents.json)，再补一个 fixture。
+If something is misjudged (a leftover is missing from the list, or something that should not be cleaned up shows up), or you want support for another agent, open an [issue](https://github.com/thelifeofgame/reap/issues). Adding an agent usually only requires editing [spec/agents.json](spec/agents.json) and adding a fixture.
 
-## 致谢
+## Credits
 
-进程检测思路和磁盘清理规则参考了 [seshka](https://github.com/jigjoy-ai/seshka)（MIT）。
+The process detection approach and disk cleanup rules were informed by [seshka](https://github.com/jigjoy-ai/seshka) (MIT).
 
-## 许可证
+## License
 
 [MIT](LICENSE)
